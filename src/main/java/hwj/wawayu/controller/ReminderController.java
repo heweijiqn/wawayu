@@ -23,28 +23,45 @@ public class ReminderController {
     @Autowired
     private ReminderService reminderService;
 
+
+
+    /**
+     * 增加新的提醒。
+     */
+
     @PostMapping("/add")
     public Reminder addReminder(@RequestParam Long creatorId, @RequestBody Reminder reminder) {
-        reminder.setCreatorId(creatorId);
-        return reminderService.addReminder(reminder);
+        return reminderService.addReminder(creatorId, reminder);
     }
 
+    /**
+     * 获取指定创建者的提醒列表。
+     */
+    @GetMapping("/{creatorId}")
+    public List<Reminder> getRemindersByCreatorId(@PathVariable Long creatorId) {
+
+        return reminderService.getRemindersByCreatorId(creatorId);
+    }
+
+    /**
+     * 删除指定提醒。
+     */
+    @DeleteMapping("/{id}/{creatorId}")
+    public void deleteReminder(@PathVariable Long id, @PathVariable Long creatorId) {
+
+        reminderService.deleteReminder(id, creatorId);
+    }
+
+    /**
+     * 更新提醒内容或时间。
+     */
     @PutMapping("/{id}")
     public Reminder updateReminder(@PathVariable Long id,
                                    @RequestParam Long creatorId,
                                    @RequestParam String content,
-                                   @RequestParam LocalDateTime reminderTime) {
+                                   @RequestParam LocalDateTime reminderTime
+                                  ) {
+
         return reminderService.updateReminder(id, creatorId, content, reminderTime);
-    }
-
-    @DeleteMapping("/{id}/{creatorId}")
-    public void deleteReminder(@PathVariable Long id, @PathVariable Long creatorId) {
-        reminderService.deleteReminder(id, creatorId);
-    }
-
-
-    @GetMapping("/{creatorId}")
-    public List<Reminder> getRemindersByCreatorId(@PathVariable Long creatorId) {
-        return reminderService.getRemindersByCreatorId(creatorId);
     }
 }

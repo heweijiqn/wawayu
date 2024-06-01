@@ -24,9 +24,10 @@ class ReminderServiceTest {
      */
     @Test
     void addReminder() {
+        Long creatorId = 1L;
         Reminder reminder = new Reminder();
         // 设置创建者ID
-        reminder.setCreatorId(1L);
+        reminder.setCreatorId(creatorId);
         // 设置提醒内容
         reminder.setContent("2024.6.1，14点半去下象棋");
         // 指定提醒时间
@@ -34,7 +35,7 @@ class ReminderServiceTest {
         // 设置提醒时间
         reminder.setReminderTime(specifiedTime);
         // 调用 addReminder
-        Reminder addedReminder = reminderService.addReminder(reminder);
+        Reminder addedReminder = reminderService.addReminder(creatorId, reminder);
         System.out.println(addedReminder);
         // 检查添加后的 Reminder 对象是否具有唯一的 ID
         assertNotNull(addedReminder.getId(), "添加后的提醒ID不是null");
@@ -53,18 +54,19 @@ class ReminderServiceTest {
      */
     @Test
     void testGetRemindersByCreatorId() {
+        Long creatorId = 2L;
         Reminder reminder1 = new Reminder();
-        reminder1.setCreatorId(2L);
+        reminder1.setCreatorId(creatorId);
         reminder1.setContent("2024.6.2，去下象棋");
         reminder1.setReminderTime(LocalDateTime.now().plusDays(1));
 
         Reminder reminder2 = new Reminder();
-        reminder2.setCreatorId(2L);
+        reminder2.setCreatorId(creatorId);
         reminder2.setContent("2024.6.3，去下象棋");
         reminder2.setReminderTime(LocalDateTime.now().plusDays(2));
 
-        reminderService.addReminder(reminder1);
-        reminderService.addReminder(reminder2);
+        reminderService.addReminder(creatorId,reminder1);
+        reminderService.addReminder(creatorId,reminder2);
 
         List<Reminder> reminders = reminderService.getRemindersByCreatorId(2L);
         System.out.println(reminders);
@@ -80,12 +82,13 @@ class ReminderServiceTest {
      */
     @Test
     void testDeleteReminder() {
+        Long creatorId = 3L;
         Reminder reminder = new Reminder();
-        reminder.setCreatorId(3L);
+        reminder.setCreatorId(creatorId);
         reminder.setContent("Test reminder");
         reminder.setReminderTime(LocalDateTime.now().plusDays(1));
 
-        Reminder addedReminder = reminderService.addReminder(reminder);
+        Reminder addedReminder = reminderService.addReminder(creatorId,reminder);
         System.out.println(addedReminder);
         reminderService.deleteReminder(addedReminder.getId(), 3L);
         System.out.println(reminderService.getRemindersByCreatorId(3L));
@@ -98,12 +101,13 @@ class ReminderServiceTest {
      */
     @Test
     void testUpdateReminder() {
+        Long creatorId = 4L;
         Reminder reminder = new Reminder();
-        reminder.setCreatorId(4L);
+        reminder.setCreatorId(creatorId);
         reminder.setContent("2024.6.4，去下象棋");
         reminder.setReminderTime(LocalDateTime.now().plusDays(1));
 
-        Reminder addedReminder = reminderService.addReminder(reminder);
+        Reminder addedReminder = reminderService.addReminder(creatorId,reminder);
         System.out.println(addedReminder);
         String updatedContent = "2024.6.5，去下象棋";
         LocalDateTime updatedTime = LocalDateTime.now().plusDays(2);
@@ -121,12 +125,13 @@ class ReminderServiceTest {
      */
     @Test
     void testDeleteReminderByNonOwner() {
+        Long creatorId = 5L;
         Reminder reminder = new Reminder();
-        reminder.setCreatorId(5L);
+        reminder.setCreatorId(creatorId);
         reminder.setContent("Test reminder");
         reminder.setReminderTime(LocalDateTime.now().plusDays(1));
 
-        Reminder addedReminder = reminderService.addReminder(reminder);
+        Reminder addedReminder = reminderService.addReminder(creatorId,reminder);
 
         System.out.println(addedReminder);
         try {
@@ -144,12 +149,13 @@ class ReminderServiceTest {
      */
     @Test
     void testUpdateReminderUnauthorized() {
+        Long creatorId = 6L;
         Reminder reminder = new Reminder();
-        reminder.setCreatorId(6L);
+        reminder.setCreatorId(creatorId);
         reminder.setContent("2024.6.3，去下象棋");
         reminder.setReminderTime(LocalDateTime.now().plusDays(1));
 
-        Reminder addedReminder = reminderService.addReminder(reminder);
+        Reminder addedReminder = reminderService.addReminder(creatorId,reminder);
 
         System.out.println(addedReminder);
         String updatedContent = "2024.6.4，去下象棋";

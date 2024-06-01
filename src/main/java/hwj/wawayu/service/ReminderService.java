@@ -29,11 +29,15 @@ public class ReminderService {
     /**
      * 添加新的提醒。
      */
-    public Reminder addReminder(Reminder reminder) {
+    public Reminder addReminder(Long creatorId, Reminder reminder) {
+        if (!reminder.getCreatorId().equals(creatorId)) {
+            throw new IllegalArgumentException("只能添加自己的提醒");
+        }
         long id = idGenerator.incrementAndGet();  // 生成唯一ID
         reminder.setId(id);
         reminders.put(id, reminder);
         return reminder;
+
     }
 
 
@@ -70,14 +74,17 @@ public class ReminderService {
      */
     public Reminder updateReminder(Long id, Long creatorId, String content, LocalDateTime reminderTime) {
         Reminder reminder = reminders.get(id);
-        if (reminder != null && reminder.getCreatorId().equals(creatorId)) {
-            reminder.setContent(content);
-            reminder.setReminderTime(reminderTime);
-            reminders.put(id, reminder);
-            return reminder;
-        } else {
-            throw new IllegalStateException("只能更新自己的提醒信息");
+        if (reminder == null) {
+            throw new IllegalArgumentException("提醒不存在");
         }
+        if (!reminder.getCreatorId().equals(creatorId)) {
+            throw new IllegalArgumentException("只能更新自己的提醒");
+        }
+        reminder.setContent(content);
+        reminder.setReminderTime(reminderTime);
+        reminders.put(id, reminder);
+        return reminder;
     }
+
 
 }
